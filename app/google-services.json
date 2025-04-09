@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "128759837980",
+    "project_id": "natalie-d7a43",
+    "storage_bucket": "natalie-d7a43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128759837980:android:206c8e408e82b1535336d9",
+        "android_client_info": {
+          "package_name": "com.example.natalie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1AT7Fwr1uoJqC4MavFUUIf2af9z0UjiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
