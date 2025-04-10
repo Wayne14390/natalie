@@ -55,17 +55,23 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.natalie.R
+import com.example.natalie.data.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController){
+
+    var authViewModel: AuthViewModel= viewModel()
+
     var firstname by remember { mutableStateOf(value = "") }
     var lastname by remember { mutableStateOf(value = "") }
     var email by remember { mutableStateOf(value = "") }
     var password by remember { mutableStateOf(value = "") }
+    var  context = LocalContext.current
 
     Column (modifier = Modifier.fillMaxHeight().fillMaxWidth()){
         TopAppBar(
@@ -148,7 +154,9 @@ fun RegisterScreen(navController: NavController){
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") }
             )
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {},
+        Button(onClick = {
+            authViewModel.signup(firstname,lastname,email,password,navController ,context)
+        },
             modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally).width(250.dp),
             colors = ButtonDefaults.buttonColors(Color.Blue)) { Text(text = "Sign Up") }
         Spacer(modifier = Modifier.height(8.dp))

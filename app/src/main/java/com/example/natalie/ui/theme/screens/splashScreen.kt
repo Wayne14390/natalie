@@ -26,11 +26,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.draw.alpha
 import com.example.natalie.R
 
 @Composable
 fun SplashScreen(onNavigateToNext: () -> Unit) {
-    val splashScreenDuration = 80000L
+    val splashScreenDuration = 30000L
 
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(splashScreenDuration)
@@ -47,6 +48,16 @@ fun SplashScreen(onNavigateToNext: () -> Unit) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
+        // Water drops overlay
+        Image(
+            painter = painterResource(id = R.drawable.waterdrops),
+            contentDescription = "Water Drops Overlay",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.2f) // Optional transparency
+        )
+
 
         // Overlay content
         Column(
