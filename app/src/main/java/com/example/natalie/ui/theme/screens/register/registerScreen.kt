@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBar
@@ -27,15 +24,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
+
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -53,6 +48,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -64,14 +61,13 @@ import com.example.natalie.data.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController){
-
-    var authViewModel: AuthViewModel= viewModel()
-
+    val authViewModel: AuthViewModel= viewModel()
     var firstname by remember { mutableStateOf(value = "") }
     var lastname by remember { mutableStateOf(value = "") }
     var email by remember { mutableStateOf(value = "") }
     var password by remember { mutableStateOf(value = "") }
-    var  context = LocalContext.current
+    val context = LocalContext.current
+    val passwordVisible by remember { mutableStateOf(false) }
 
     Column (modifier = Modifier.fillMaxHeight().fillMaxWidth()){
         TopAppBar(
@@ -150,12 +146,13 @@ fun RegisterScreen(navController: NavController){
             onValueChange = {newPassword -> password =newPassword},
             label = { Text(text = "Enter your password") },
             placeholder = { Text(text = "Please enter password") },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally),
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") }
             )
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = {
-            authViewModel.signup(firstname,lastname,email,password,navController ,context)
+            authViewModel.signup(firstname,lastname,email,password,navController,context)
         },
             modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally).width(250.dp),
             colors = ButtonDefaults.buttonColors(Color.Blue)) { Text(text = "Sign Up") }

@@ -1,10 +1,12 @@
 package com.example.natalie.data
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.natalie.models.UserModel
+import com.example.natalie.navigation.ROUTE_HOME
 import com.example.natalie.navigation.ROUTE_LOGIN
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -23,7 +25,7 @@ class AuthViewModel:ViewModel() {
         }
         _isloading.value = true
 
-        mAuth.createUserWithEmailAndPassword(email,password)
+        mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 _isloading.value = false
                 if (task.isSuccessful){
@@ -38,8 +40,9 @@ class AuthViewModel:ViewModel() {
                     }
             }
     }
-    fun saveUserToDatabase(userId:String, userData:UserModel, navController: NavController, context: Context){
-        val regRef = FirebaseDatabase.getInstance().getReference("users/$userId")
+
+    fun saveUserToDatabase (userId:String, userData:UserModel, navController: NavController, context: Context){
+        val regRef = FirebaseDatabase.getInstance().getReference("Users/$userId")
         regRef.setValue(userData).addOnCompleteListener { regRef ->
             if (regRef.isSuccessful){
 
@@ -51,5 +54,27 @@ class AuthViewModel:ViewModel() {
                 Toast.makeText(context,"Database error",Toast.LENGTH_LONG).show()
             }
         }
+    }
+    fun login(email: String,password: String,navController: NavController,context: Context){
+        if (email.isBlank() || password.isBlank()){
+
+            Toast.makeText(context,"Email amd password required",Toast.LENGTH_LONG).show()
+            return
+        }
+        _isloading.value = true
+
+        mAuth.signInWithEmailAndPassword(email,password)
+            .addOnCompleteListener { task ->
+                _isloading.value=false
+                if (task.isSuccessful){
+
+                    Toast.makeText(context,"User Successfully logged in",Toast.LENGTH_LONG).show()
+                    navController.navigate(ROUTE_HOME)
+                }else{
+                    _errorMessage.value=task.exception?.message
+
+                    Toast.makeText(context,"Login failed",Toast.LENGTH_LONG).show()
+                }
+            }
     }
 }

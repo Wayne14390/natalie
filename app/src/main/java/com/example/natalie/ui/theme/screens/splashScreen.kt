@@ -31,7 +31,7 @@ import com.example.natalie.R
 
 @Composable
 fun SplashScreen(onNavigateToNext: () -> Unit) {
-    val splashScreenDuration = 30000L
+    val splashScreenDuration = 5000L
 
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(splashScreenDuration)

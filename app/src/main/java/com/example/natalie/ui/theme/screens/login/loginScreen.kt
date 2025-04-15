@@ -40,19 +40,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.natalie.R
+import com.example.natalie.data.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController){
+    var authViewModel:AuthViewModel= viewModel()
     var email by remember { mutableStateOf(value = "") }
     var password by remember { mutableStateOf(value = "") }
+    var context = LocalContext.current
+    val passwordVisible by remember { mutableStateOf(false) }
     Column (modifier = Modifier.fillMaxHeight().fillMaxWidth()){
         TopAppBar(
             title = { Text(text = "") },
@@ -101,6 +108,7 @@ fun LoginScreen(navController: NavController){
             onValueChange = {newPassword -> password =newPassword},
             label = { Text(text = "Enter your password") },
             placeholder = { Text(text = "Please enter password") },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally),
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") }
         )
@@ -108,7 +116,9 @@ fun LoginScreen(navController: NavController){
         Text(text = buildAnnotatedString { append("Forgot password?") }, modifier = Modifier.wrapContentWidth().clickable {
         })
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {}, modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally), colors = ButtonDefaults.buttonColors(Color.Green)) { Text(text = "Login") }
+        Button(onClick = {
+            authViewModel.login(email,password,navController, context)
+        }, modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally), colors = ButtonDefaults.buttonColors(Color.Green)) { Text(text = "Login") }
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = buildAnnotatedString { append("If you don't have an account,register here") }, modifier = Modifier.wrapContentWidth().align(
             Alignment.CenterHorizontally).clickable {
