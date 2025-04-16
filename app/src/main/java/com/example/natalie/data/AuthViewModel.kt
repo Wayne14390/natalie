@@ -1,6 +1,7 @@
 package com.example.natalie.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -76,5 +77,15 @@ class AuthViewModel:ViewModel() {
                     Toast.makeText(context,"Login failed",Toast.LENGTH_LONG).show()
                 }
             }
+    }
+    fun logout(navController: NavController, context: Context) {
+        // Sign out the user
+        mAuth.signOut()
+
+        // Show a confirmation message
+        Toast.makeText(context, "Successfully logged out", Toast.LENGTH_LONG).show()
+
+        // Navigate to the login screen
+        navController.navigate(ROUTE_LOGIN)
     }
 }

@@ -57,6 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.natalie.R
 import com.example.natalie.data.AuthViewModel
+import com.example.natalie.navigation.ROUTE_LOGIN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,6 +159,7 @@ fun RegisterScreen(navController: NavController){
             colors = ButtonDefaults.buttonColors(Color.Blue)) { Text(text = "Sign Up") }
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = buildAnnotatedString { append("If already registered, Login here") }, modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally)        .clickable {
+            navController.navigate(ROUTE_LOGIN)
         })
 
     }

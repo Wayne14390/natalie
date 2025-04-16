@@ -1,11 +1,11 @@
 package com.example.natalie.ui.theme.screens.login
 
-import android.content.Intent
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,11 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -51,6 +51,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.natalie.R
 import com.example.natalie.data.AuthViewModel
+import com.example.natalie.navigation.ROUTE_REGISTER
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,11 +61,12 @@ fun LoginScreen(navController: NavController){
     var password by remember { mutableStateOf(value = "") }
     var context = LocalContext.current
     val passwordVisible by remember { mutableStateOf(false) }
+    var rememberMe by remember { mutableStateOf(false) }
     Column (modifier = Modifier.fillMaxHeight().fillMaxWidth()){
         TopAppBar(
             title = { Text(text = "") },
             navigationIcon = { IconButton(onClick = {})
-            { Icon(imageVector = Icons.Filled.ArrowBack,
+            { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Arrowback") } },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Transparent,
@@ -75,7 +77,7 @@ fun LoginScreen(navController: NavController){
 
         )
         Text(
-            text = "Login Here!!",
+            text = "LOGIN TO YOUR ACCOUNT",
             fontSize = 30.sp,
             color = Color.Black,
             fontFamily = FontFamily.SansSerif,
@@ -86,6 +88,7 @@ fun LoginScreen(navController: NavController){
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         Image(painter = painterResource(R.drawable.logo),
             contentDescription = "logo",
             modifier = Modifier
@@ -94,6 +97,7 @@ fun LoginScreen(navController: NavController){
                 .height(100.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
             value = email,
             onValueChange = {newEmail -> email = newEmail},
@@ -113,8 +117,30 @@ fun LoginScreen(navController: NavController){
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") }
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = buildAnnotatedString { append("Forgot password?") }, modifier = Modifier.wrapContentWidth().clickable {
-        })
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = rememberMe,
+                    onCheckedChange = { rememberMe = it }
+                )
+                Text(text = "Remember me")
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = buildAnnotatedString { append("Forgot password?") },
+                modifier = Modifier.clickable {
+                    // Handle forgot password click
+                }
+            )
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = {
             authViewModel.login(email,password,navController, context)
@@ -122,7 +148,7 @@ fun LoginScreen(navController: NavController){
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = buildAnnotatedString { append("If you don't have an account,register here") }, modifier = Modifier.wrapContentWidth().align(
             Alignment.CenterHorizontally).clickable {
-
+                navController.navigate(ROUTE_REGISTER)
         })
 
     }
