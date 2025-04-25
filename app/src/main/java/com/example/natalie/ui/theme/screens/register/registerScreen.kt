@@ -61,7 +61,7 @@ import com.example.natalie.navigation.ROUTE_LOGIN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController){
+fun RegisterScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
     val authViewModel: AuthViewModel= viewModel()
     var firstname by remember { mutableStateOf(value = "") }
     var lastname by remember { mutableStateOf(value = "") }
@@ -73,7 +73,10 @@ fun RegisterScreen(navController: NavController){
     Column (modifier = Modifier.fillMaxHeight().fillMaxWidth()){
         TopAppBar(
             title = { Text(text = "") },
-            navigationIcon = { IconButton(onClick = {})
+            navigationIcon = {
+                IconButton(onClick = {
+                    authViewModel.handleBackClick(navController,context)
+                })
             { Icon(imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Arrowback") } },
             colors = TopAppBarDefaults.topAppBarColors(

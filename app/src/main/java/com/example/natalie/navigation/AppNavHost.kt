@@ -11,6 +11,8 @@ import com.example.natalie.ui.theme.screens.home.HomeScreen
 import com.example.natalie.ui.theme.screens.login.LoginScreen
 import com.example.natalie.ui.theme.screens.register.RegisterScreen
 import com.example.natalie.ui.theme.screens.students.AddstudentScreen
+import com.example.natalie.ui.theme.screens.students.UpdatestudentScreen
+import com.example.natalie.ui.theme.screens.students.ViewStudents
 
 @Composable
 fun AppNavHost(navController: NavHostController= rememberNavController(),startDestination:String= ROUTE_SPLASH){
@@ -22,7 +24,11 @@ fun AppNavHost(navController: NavHostController= rememberNavController(),startDe
            composable(ROUTE_LOGIN) { LoginScreen(navController) }
            composable(ROUTE_HOME) { HomeScreen(navController) }
            composable(ROUTE_ADD_STUDENT) { AddstudentScreen(navController) }
-
+           composable(ROUTE_VIEW_STUDENTS){ ViewStudents(navController) }
+           composable("$ROUTE_UPDATE_STUDENT/{studentId}") {
+                   passedData -> UpdatestudentScreen(
+               navController, passedData.arguments?.getString("studentId")!! )
+           }
        }
 
 }

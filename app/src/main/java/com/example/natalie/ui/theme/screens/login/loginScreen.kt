@@ -55,7 +55,7 @@ import com.example.natalie.navigation.ROUTE_REGISTER
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController){
+fun LoginScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
     var authViewModel:AuthViewModel= viewModel()
     var email by remember { mutableStateOf(value = "") }
     var password by remember { mutableStateOf(value = "") }
@@ -65,7 +65,9 @@ fun LoginScreen(navController: NavController){
     Column (modifier = Modifier.fillMaxHeight().fillMaxWidth()){
         TopAppBar(
             title = { Text(text = "") },
-            navigationIcon = { IconButton(onClick = {})
+            navigationIcon = { IconButton(onClick = {
+                authViewModel.handleBackClick(navController,context)
+            })
             { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Arrowback") } },
             colors = TopAppBarDefaults.topAppBarColors(

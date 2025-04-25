@@ -47,6 +47,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.natalie.R
 import com.example.natalie.data.AuthViewModel
+import com.example.natalie.navigation.ROUTE_ADD_STUDENT
 import com.example.natalie.navigation.ROUTE_LOGIN
 import com.example.natalie.navigation.ROUTE_SPLASH
 
@@ -136,7 +137,9 @@ fun HomeScreen(navController: NavController,viewModel: AuthViewModel = viewModel
                             contentDescription = "Menu"
                         )
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        authViewModel.logout(navController,context)
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.AccountBox,
                             contentDescription = "Logout"
@@ -161,7 +164,7 @@ fun HomeScreen(navController: NavController,viewModel: AuthViewModel = viewModel
                 {
                     Box(
                         modifier = Modifier.height(100.dp)
-                            .padding(25.dp),
+                            .padding(25.dp).clickable { navController.navigate(ROUTE_ADD_STUDENT) },
                         contentAlignment = Alignment.Center
                     )
                     { Text(text = "Students", color = Color.Black) }

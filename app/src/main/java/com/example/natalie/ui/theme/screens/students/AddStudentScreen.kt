@@ -1,6 +1,7 @@
 package com.example.natalie.ui.theme.screens.students
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -17,11 +18,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -40,18 +49,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.natalie.R
+import com.example.natalie.data.AuthViewModel
+import com.example.natalie.data.StudentViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddstudentScreen(navController: NavController){
+fun AddstudentScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
     var  name by remember { mutableStateOf( "") }
     var  gender by remember { mutableStateOf( "") }
     var  course by remember { mutableStateOf( "") }
     var  description by remember { mutableStateOf( "") }
+    val authViewModel: AuthViewModel = viewModel()
     val imageUri = rememberSaveable() { mutableStateOf<Uri?>(null) }
+    val studentViewModel: StudentViewModel= viewModel()
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent())
     {uri: Uri? -> uri?.let { imageUri.value=it } }
     Box() {
@@ -63,9 +79,24 @@ fun AddstudentScreen(navController: NavController){
     }
     Column(modifier = Modifier.fillMaxSize().padding(25.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
+        TopAppBar(
+            title = { Text(text = "") },
+            navigationIcon = {
+                IconButton(onClick = {
+                    authViewModel.handleBackClick(navController,context)
+                })
+                { Icon(imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Arrowback") } },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                navigationIconContentColor = Color.Green,
+                titleContentColor = Color.Black,
+                actionIconContentColor = Color.Green
+            )
+        )
         Box(modifier = Modifier.fillMaxWidth().background(Color.Green).padding(20.dp)) {
             Text(text = "ADD NEW STUDENT",
-                fontSize = 30.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 fontFamily = FontFamily.SansSerif,
@@ -75,7 +106,7 @@ fun AddstudentScreen(navController: NavController){
             )
         }
         Card(shape = CircleShape,
-            modifier = Modifier.padding(10.dp).size(200.dp)) {
+            modifier = Modifier.padding(10.dp).size(150.dp)) {
             AsyncImage(model = imageUri.value ?: R.drawable.ic_person,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
@@ -108,7 +139,11 @@ fun AddstudentScreen(navController: NavController){
             horizontalArrangement = Arrangement.SpaceBetween) {
             Button(onClick = {}, modifier = Modifier.wrapContentWidth(), colors = ButtonDefaults.buttonColors(
                 Color.Black)) { Text(text = "Dashboard") }
-            Button(onClick = {}, modifier = Modifier.wrapContentWidth(), colors = ButtonDefaults.buttonColors(
+            Button(onClick = {
+                imageUri.value?.let {
+                    studentViewModel.uploadStudentWithImage(it, context,name,gender,course, description,navController)
+                }?: Toast.makeText(context,"Please pick an image",Toast.LENGTH_LONG).show()
+            }, modifier = Modifier.wrapContentWidth(), colors = ButtonDefaults.buttonColors(
                 Color.Green)) { Text(text = "Save") }
         }
     }

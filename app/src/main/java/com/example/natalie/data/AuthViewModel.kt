@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.natalie.models.UserModel
@@ -17,6 +18,8 @@ class AuthViewModel:ViewModel() {
     private val mAuth:FirebaseAuth=FirebaseAuth.getInstance()
     private val _isloading = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow<String?>(null)
+
+
 
     fun signup(firstname:String, lastname:String, email:String, password:String, navController: NavController, context: Context){
         if (firstname.isBlank() || lastname.isBlank() || email.isBlank() || password.isBlank()){
@@ -85,7 +88,16 @@ class AuthViewModel:ViewModel() {
         // Show a confirmation message
         Toast.makeText(context, "Successfully logged out", Toast.LENGTH_LONG).show()
 
-        // Navigate to the login screen
-        navController.navigate(ROUTE_LOGIN)
+        // Navigate to login and clear all previous destinations
+        navController.navigate(ROUTE_LOGIN) {
+            popUpTo(0) { inclusive = true } // Clears the entire back stack
+            launchSingleTop = true
+        }
     }
+
+
+    fun handleBackClick(navController: NavController, context: Context  ) {
+        navController.popBackStack()
+    }
+
 }
