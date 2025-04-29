@@ -18,10 +18,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -43,6 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.natalie.R
+import com.example.natalie.data.AuthViewModel
 import com.example.natalie.data.StudentViewModel
 import com.example.natalie.models.StudentModel
 import com.google.firebase.database.DataSnapshot
@@ -50,15 +58,18 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdatestudentScreen(navController: NavController,studentId: String){
     val imageUri = rememberSaveable { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? -> uri?.let { imageUri.value=it } }
     var name by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
+    var nationality by remember { mutableStateOf("") }
     var course by remember { mutableStateOf("") }
     var desc by remember { mutableStateOf("") }
     val studentViewModel: StudentViewModel= viewModel()
+    val authViewModel: AuthViewModel = viewModel()
     val context= LocalContext.current
     val currentDataRef  = FirebaseDatabase.getInstance()
         .getReference().child("Students/$studentId")
@@ -70,6 +81,7 @@ fun UpdatestudentScreen(navController: NavController,studentId: String){
                 student?.let {
                     name = it.name
                     gender = it.gender
+                    nationality = it.nationality
                     course = it.course
                     desc = it.desc
                 }
@@ -85,6 +97,21 @@ fun UpdatestudentScreen(navController: NavController,studentId: String){
     Column (modifier = Modifier.padding(10.dp)
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally){
+        TopAppBar(
+            title = { Text(text = "") },
+            navigationIcon = {
+                IconButton(onClick = {
+                    authViewModel.handleBackClick(navController,context)
+                })
+                { Icon(imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Arrowback") } },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                navigationIconContentColor = Color.Green,
+                titleContentColor = Color.Black,
+                actionIconContentColor = Color.Green
+            )
+        )
         Box(modifier = Modifier.fillMaxWidth()
             .background(Color.Red).padding(16.dp)){ Text(text = "UPDATE STUDENT",
             fontStyle = FontStyle.Normal,
@@ -112,6 +139,11 @@ fun UpdatestudentScreen(navController: NavController,studentId: String){
             label = { Text(text = "Enter student gender") },
             placeholder = { Text(text = "PLease enter student gender") },
             modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = nationality,
+            onValueChange = {newNationality->nationality=newNationality},
+            label = { Text(text = "Enter Nationality") },
+            placeholder = { Text(text = "Please enter nationality") },
+            modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = course,
             onValueChange = {newCourse->course=newCourse},
             label = { Text(text = "Enter student course") },
@@ -137,6 +169,7 @@ fun UpdatestudentScreen(navController: NavController,studentId: String){
                     navController = navController,
                     name = name,
                     gender = gender,
+                    nationality = nationality,
                     course = course,
                     desc = desc,
                     studentId = studentId

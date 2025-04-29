@@ -62,6 +62,7 @@ import com.example.natalie.data.StudentViewModel
 fun AddstudentScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
     var  name by remember { mutableStateOf( "") }
     var  gender by remember { mutableStateOf( "") }
+    var nationality by remember { mutableStateOf("") }
     var  course by remember { mutableStateOf( "") }
     var  description by remember { mutableStateOf( "") }
     val authViewModel: AuthViewModel = viewModel()
@@ -77,7 +78,7 @@ fun AddstudentScreen(navController: NavController,viewModel: AuthViewModel = vie
             contentScale = ContentScale.FillBounds
         )
     }
-    Column(modifier = Modifier.fillMaxSize().padding(25.dp),
+    Column(modifier = Modifier.fillMaxSize().padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBar(
             title = { Text(text = "") },
@@ -124,6 +125,11 @@ fun AddstudentScreen(navController: NavController,viewModel: AuthViewModel = vie
             label = { Text(text = "Enter Gender") },
             placeholder = { Text(text = "Please enter gender") },
             modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = nationality,
+            onValueChange = {newNationality->nationality=newNationality},
+            label = { Text(text = "Enter Nationality") },
+            placeholder = { Text(text = "Please enter nationality") },
+            modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = course,
             onValueChange = {newCourse->course=newCourse},
             label = { Text(text = "Enter Course") },
@@ -133,7 +139,7 @@ fun AddstudentScreen(navController: NavController,viewModel: AuthViewModel = vie
             onValueChange = {newDescription->description=newDescription  },
             label = { Text(text = "Enter Description") },
             placeholder = { Text(text = "Please enter description") },
-            modifier = Modifier.fillMaxWidth().height(150.dp),
+            modifier = Modifier.fillMaxWidth().height(100.dp),
             singleLine = false)
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween) {
@@ -141,7 +147,7 @@ fun AddstudentScreen(navController: NavController,viewModel: AuthViewModel = vie
                 Color.Black)) { Text(text = "Dashboard") }
             Button(onClick = {
                 imageUri.value?.let {
-                    studentViewModel.uploadStudentWithImage(it, context,name,gender,course, description,navController)
+                    studentViewModel.uploadStudentWithImage(it, context,name,gender,nationality,course, description,navController)
                 }?: Toast.makeText(context,"Please pick an image",Toast.LENGTH_LONG).show()
             }, modifier = Modifier.wrapContentWidth(), colors = ButtonDefaults.buttonColors(
                 Color.Green)) { Text(text = "Save") }

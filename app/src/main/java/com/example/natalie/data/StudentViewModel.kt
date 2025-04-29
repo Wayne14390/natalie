@@ -67,6 +67,7 @@ class StudentViewModel: ViewModel() {
         context: Context,
         name: String,
         gender: String,
+        nationality:String,
         course: String,
         desc: String,
         navController: NavController
@@ -94,7 +95,7 @@ class StudentViewModel: ViewModel() {
 
                     val studentId = database.push().key ?: ""
                     val student = StudentModel(
-                        name, gender, course,desc, imageUrl, studentId
+                        name, gender, nationality, course, desc, imageUrl, studentId
                     )
 
                     database.child(studentId).setValue(student)
@@ -157,12 +158,14 @@ class StudentViewModel: ViewModel() {
         return students
     }
     fun updateStudent(context: Context, navController: NavController,
-                      name: String, gender: String,
+                      name: String, gender: String,nationality: String,
                       course: String, desc: String, studentId: String){
         val databaseReference = FirebaseDatabase.getInstance()
             .getReference("Students/$studentId")
-        val updatedStudent = StudentModel(name, gender,
-            course, desc,"",studentId)
+        val updatedStudent = StudentModel(
+            name, gender,nationality,
+            course, desc, "", studentId
+        )
 
         databaseReference.setValue(updatedStudent)
             .addOnCompleteListener { task ->
